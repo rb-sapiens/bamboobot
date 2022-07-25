@@ -1,0 +1,49 @@
+{
+  "header": {
+    "first_action": "wait_until_start"
+  },
+  "actions":[
+    {
+      "name": "wait_until_start",
+      "command":["sleep", 15],
+      "success":"goto_main_table",
+      "failure":"goto_main_table"
+    },
+    {
+      "name": "goback_to_start",
+      "command":["goto", "initial_point"],
+      "success":"finish",
+      "failure":"goback_to_start"
+    },
+    {
+      "name": "goto_main_table",
+      "command":["goto", "main_table"],
+      "success":"measure_main_table",
+      "failure":"goback_to_start"
+    },
+    {
+      "name": "measure_main_table",
+      "command":["set_length", 500],
+      "success":"sleep_main_table",
+      "failure":"goback_to_start"
+    },
+    {
+      "name": "sleep_main_table",
+      "command":["sleep", 3],
+      "success":"reset_main_table",
+      "failure":"goback_to_start"
+    },
+    {
+      "name": "reset_main_table",
+      "command":["set_length", 0],
+      "success":"goback_to_start",
+      "failure":"goback_to_start"
+    },
+    {
+      "name": "finish",
+      "command":["finish"],
+      "success":"",
+      "failure":""
+    }
+  ]
+}

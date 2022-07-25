@@ -1,0 +1,19 @@
+<launch>
+  <arg name="usbname" default="ch341-uart"/>
+  <arg name="sudopass" default=""/>
+  <arg name="map_file" default="$(find bamboobot)/maps/maruzen.yaml"/>
+
+  <!-- BambooShoot Actuator-->
+  <include file="$(find bsactuator_ros)/launch/bsactuator.launch" >
+    <arg name="usbname" value="$(arg usbname)"/>
+    <arg name="sudopass" value="$(arg sudopass)"/>
+  </include>
+
+  <!-- registrating spot-->
+  <node pkg="bamboobot" type="register_spot" name="register_spot"/>
+
+  <!-- navigation  -->
+  <include file="$(find turn_on_wheeltec_robot)/launch/navigation.launch">
+    <arg name="map_file" value="$(arg map_file)"/>
+  </include>
+</launch>
