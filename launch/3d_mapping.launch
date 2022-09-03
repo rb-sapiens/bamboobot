@@ -1,0 +1,25 @@
+<launch>
+  <arg name="usbname" default="ch341-uart"/>
+  <arg name="sudopass" default=""/>
+  <arg name="database_path" default="~/.ros/test.db"/>
+
+  <!-- BambooShoot Actuator-->
+  <include file="$(find bsactuator_ros)/launch/bsactuator.launch" >
+    <arg name="usbname" value="$(arg usbname)"/>
+    <arg name="sudopass" value="$(arg sudopass)"/>
+  </include>
+
+  <!-- mapping  -->
+  <!-- 开启机器人2d建图 -->
+  <include file="$(find turn_on_wheeltec_robot)/launch/mapping.launch" >
+  	<!-- 关闭rtab提供的定位补偿，使用2D建图进行定位补偿 -->
+  	<arg name="odom_frame_id"  value="odom"/>
+  </include>
+
+  <!-- 开启摄像头 -->
+  <include file="$(find astra_camera)/launch/astra.launch" />
+  <!-- 开启3d 建图 -->
+  <include file="$(find turn_on_wheeltec_robot)/launch/include/rtabmap_mapping.launch">
+    <arg name="database_path" value="$(arg database_path)"/>
+  </include>
+</launch>
