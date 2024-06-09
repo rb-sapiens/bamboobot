@@ -1,0 +1,70 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+#################################################################################
+# MIT License
+
+# Copyright (c) 2022 Shun Nagao
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#################################################################################
+
+import rospy
+import numpy as np
+from sensor_msgs.msg import LaserScan
+
+scan_publisher = None
+
+def convert_scan(data):
+    global scan_publisher
+
+    ignore_angle_min = -0.523599
+    ignore_angle_max = 0.523599
+
+    # 新しいLaserScanメッセージを作成します。
+    filtered_scan = LaserScan()
+    filtered_scan.header = data.header
+    filtered_scan.angle_min = data.angle_min
+    filtered_scan.angle_max = data.angle_max
+    filtered_scan.angle_increment = data.angle_increment
+    filtered_scan.time_increment = data.time_increment
+    filtered_scan.scan_time = data.scan_time
+    filtered_scan.range_min = data.range_min
+    filtered_scan.range_max = data.range_max
+
+    # 無視する範囲のデータを除外します。
+    for i, angle in enumerate(np.arange(data.angle_min, data.angle_max, data.angle_increment)):
+        if angle > ignore_angle_min and angle < ignore_angle_max:
+            filtered_scan.ranges.append(float('nan'))
+        else:
+            filtered_scan.ranges.append(data.ranges[i])
+            
+    # フィルタリング後のデータをパブリッシュします。
+    scan_publisher.publish(filtered_scan)
+
+
+if __name__ == '__main__':
+    rospy.init_node('scan_filter', log_level=rospy.DEBUG)
+
+    rospy.Subscriber('/scan_raw', LaserScan, convert_scan)
+    scan_publisher = rospy.Publisher('/scan', LaserScan, queue_size=10)
+
+    r = rospy.Rate(10)
+    while not rospy.is_shutdown():
+        r.sleep()

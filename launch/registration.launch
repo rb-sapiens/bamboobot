@@ -1,6 +1,4 @@
 <launch>
-  <arg name="usbname" default="ch341-uart"/>
-  <arg name="sudopass" default=""/>
   <arg name="map_file" default="$(find bamboobot)/maps/maruzen.yaml"/>
 
   <!-- BambooShoot Actuator-->

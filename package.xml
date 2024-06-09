@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>bamboobot</name>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
   <description>The bamboobot package</description>
   <maintainer email="nagao@rb-sapiens.com">Shun Nagao</maintainer>
   <license>MIT</license>

@@ -1,8 +1,6 @@
 <launch>
-  <arg name="usbname" default="ch341-uart"/>
-  <arg name="sudopass" default=""/>
   <arg name="map_file" default="$(find bamboobot)/maps/maruzen.yaml"/>
-  <arg name="sequence_file" default="$(find bamboobot)/sequences/measure_main_table.json"/>
+  <arg name="sequence_file" default="$(find bamboobot)/sequences/sample.json"/>
 
   <!-- BambooShoot Actuator-->
   <include file="$(find bsactuator_ros)/launch/bsactuator.launch" >
