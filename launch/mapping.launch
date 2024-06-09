@@ -1,7 +1,4 @@
 <launch>
-  <arg name="usbname" default="ch341-uart"/>
-  <arg name="sudopass" default=""/>
-
   <!-- BambooShoot Actuator-->
   <include file="$(find bsactuator_ros)/launch/bsactuator.launch" >
     <arg name="usbname" value="$(arg usbname)"/>
